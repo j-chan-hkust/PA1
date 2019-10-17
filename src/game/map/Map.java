@@ -52,7 +52,10 @@ public class Map {
      * @param cols Number of columns.
      */
     public Map(int rows, int cols) {
-        // TODO
+        // TODO DONE
+        this.rows = rows;
+        this.cols = cols;
+        cells = new Cell[rows][cols];
     }
 
     /**
@@ -67,7 +70,10 @@ public class Map {
      * @param cells Cells to fill the map.
      */
     public Map(int rows, int cols, @NotNull Cell[][] cells) {
-        // TODO
+        // TODO DONE
+        this.rows = rows;
+        this.cols = cols;
+        this.cells = cells;
     }
 
     /**
@@ -118,6 +124,10 @@ public class Map {
      */
     boolean tryPlacePipe(int row, int col, @NotNull Pipe p) {
         // TODO
+        /*if(cells[row][col].getClass()==Cell.class){ //in other words, if this is not defined as a pipe
+            cells[row][col] = p;
+        }*/
+        return false;
     }
 
     /**
