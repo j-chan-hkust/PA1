@@ -17,30 +17,51 @@ public class Pipe implements MapElement {
      * @param shape Shape of the pipe.
      */
     public Pipe(@NotNull Shape shape) {
-        // TODO
+        // TODO DONE
+        this.shape = shape;
     }
 
     /**
      * Sets the pipe as filled.
      */
     public void setFilled() {
-        // TODO
+        // TODO DONE
+        this.filled = true;
     }
 
     /**
      * @return Whether this pipe is filled.
      */
     public boolean getFilled() {
-        // TODO
-        return false;
+        // TODO DONE
+        return this.filled;
     }
 
     /**
      * @return List of connections for this pipe.
-     * @throws IllegalStateException if {@code this} pipe cannot be identified.
+     * @throws IllegalStateException if {@code this} pipe cannot be identified. what this mean -jung
      */
-    public @NotNull Direction[] getConnections() {
-        // TODO
+    public @NotNull Direction[] getConnections() throws IllegalStateException{
+        // TODO DONE
+        switch(this.shape){
+            case HORIZONTAL:
+                return new Direction[]{Direction.LEFT,Direction.RIGHT};
+            case VERTICAL:
+                return new Direction[]{Direction.UP,Direction.DOWN};
+            case TOP_LEFT:
+                return new Direction[]{Direction.UP,Direction.LEFT};
+            case TOP_RIGHT:
+                return new Direction[]{Direction.UP,Direction.RIGHT};
+            case BOTTOM_LEFT:
+                return new Direction[]{Direction.LEFT,Direction.UP};
+            case BOTTOM_RIGHT:
+                return new Direction[]{Direction.DOWN,Direction.RIGHT};
+            case CROSS:
+                return new Direction[]{Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN};
+            default:
+                throw new IllegalStateException("Unexpected value: " + this.shape);
+        }
+
     }
 
     /**
@@ -49,7 +70,8 @@ public class Pipe implements MapElement {
      */
     @Override
     public char toSingleChar() {
-        // TODO
+        // TODO DONE
+        return this.shape.getCharByState(filled);
     }
 
     /**
@@ -64,7 +86,25 @@ public class Pipe implements MapElement {
      * @throws IllegalArgumentException if the String does not represent a known pipe.
      */
     public static @NotNull Pipe fromString(@NotNull String rep) {
-        // TODO
+        // TODO DONE
+        switch (rep){
+            case "TL":
+                return new Pipe(Shape.TOP_LEFT);
+            case "TR":
+                return new Pipe(Shape.TOP_RIGHT);
+            case "BL":
+                return new Pipe(Shape.BOTTOM_LEFT);
+            case "BR":
+                return new Pipe(Shape.BOTTOM_RIGHT);
+            case "HZ":
+                return new Pipe(Shape.HORIZONTAL);
+            case  "VT":
+                return new Pipe(Shape.VERTICAL);
+            case "CR":
+                return new Pipe(Shape.CROSS);
+            default:
+                throw new IllegalStateException("Unexpected value: " + rep);
+        }
     }
 
     public enum Shape {
@@ -95,8 +135,8 @@ public class Pipe implements MapElement {
          * @return The character representation of {@code this} shape according to the filling state
          */
         char getCharByState(boolean isFilled) {
-            // TODO
-            return '\0';
+            // TODO DONE
+            return isFilled ? this.filledChar : this.unfilledChar;
         }
     }
 }
