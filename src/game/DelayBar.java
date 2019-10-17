@@ -24,7 +24,8 @@ class DelayBar {
      * Decrements the current value by 1.
      */
     void countdown() {
-        // TODO
+        // TODO DONE
+        currentValue--;
     }
 
     /**
@@ -36,8 +37,10 @@ class DelayBar {
      * @return The distance the water should flow at this stage.
      */
     int distance() {
-        // TODO
-        return 0;
+        // TODO DONE
+        if(currentValue>0)
+            return 0;
+        else return -currentValue;
     }
 
     void display() {

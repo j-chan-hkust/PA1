@@ -31,7 +31,10 @@ public class Game {
      * @param cols Number of columns to generate, not counting the surrounding walls.
      */
     public Game(int rows, int cols) {
-        // TODO
+        // TODO DONE
+        this.map = new Map(rows,cols);
+        this.delayBar = new DelayBar(0); //todo not sure if correct
+        this.pipeQueue = new PipeQueue();
     }
 
     /**
@@ -44,7 +47,10 @@ public class Game {
      * @param pipes List of pre-generated pipes, if any.
      */
     public Game(int rows, int cols, int delay, @NotNull Cell[][] cells, @Nullable List<Pipe> pipes) {
-        // TODO
+        // TODO DONE
+        this.map = new Map(rows,cols,cells);
+        this.delayBar = new DelayBar(delay);
+        this.pipeQueue = new PipeQueue(pipes);
     }
 
     /**
@@ -80,7 +86,16 @@ public class Game {
      * @return {@code true} if the pipe is placed.
      */
     public boolean placePipe(int row, char col) {
-        // TODO
+        // TODO DONE
+        Coordinate coord = new Coordinate(row,col);
+        if (this.map.tryPlacePipe(coord, this.pipeQueue.peek())){
+            pipeQueue.consume();
+            delayBar.countdown();
+            cellStack.pop(); //todo this could be wrong
+            numOfSteps++;
+        } //try and place the pipe
+        else return false; //fail case exit
+
     }
 
     /**
@@ -88,6 +103,7 @@ public class Game {
      */
     public void skipPipe() {
         // TODO
+        this.pipeQueue.consume();
     }
 
     /**
@@ -104,6 +120,7 @@ public class Game {
      */
     public boolean undoStep() {
         // TODO
+        numOfSteps++;
     }
 
     /**

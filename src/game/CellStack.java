@@ -20,7 +20,8 @@ class CellStack {
      * @param cell Cell to push into the stack.
      */
     void push(@NotNull final FillableCell cell) {
-        // TODO
+        // TODO DONE
+        cellStack.push(cell);
     }
 
     /**
@@ -29,15 +30,17 @@ class CellStack {
      * @return The last-pushed cell, or {@code null} if the stack is empty.
      */
     @Nullable FillableCell pop() {
-        // TODO
+        // TODO DONE
+        count++;
+        return cellStack.pop();
     }
 
     /**
      * @return Number of undos (i.e. {@link CellStack#pop()}) invoked.
      */
     int getUndoCount() {
-        // TODO
-        return 0;
+        // TODO DONE
+        return count;
     }
 
     /**
