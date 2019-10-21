@@ -122,6 +122,7 @@ public class Game {
     public boolean undoStep() {
         // TODO not sure how to make this work, come back later
         numOfSteps++;
+
         return false;
     }
 

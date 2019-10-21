@@ -31,6 +31,10 @@ class CellStack {
      */
     @Nullable FillableCell pop() {
         // TODO DONE
+        if(this.cellStack.peek().getPipe().get().getFilled()){
+            System.out.println("No steps to undo!"); //as per the notes, return error on filled pipe
+            return null;
+        }
         count++;
         return cellStack.pop();
     }
