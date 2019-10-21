@@ -93,6 +93,7 @@ public class Game {
             delayBar.countdown();
             cellStack.pop(); //todo this could be wrong
             numOfSteps++;
+            return true;
         } //try and place the pipe
         else return false; //fail case exit
 
@@ -102,7 +103,7 @@ public class Game {
      * Directly skips the current pipe and use the next pipe.
      */
     public void skipPipe() {
-        // TODO
+        // TODO DONE
         this.pipeQueue.consume();
     }
 
@@ -119,8 +120,9 @@ public class Game {
      * @return {@code false} if there are no steps to undo, otherwise {@code true}.
      */
     public boolean undoStep() {
-        // TODO
+        // TODO not sure how to make this work, come back later
         numOfSteps++;
+        return false;
     }
 
     /**
@@ -143,7 +145,8 @@ public class Game {
      * </p>
      */
     public void updateState() {
-        // TODO
+        // TODO DONE
+        this.map.fillTiles(1); //fill the distance by 1.
     }
 
     /**
@@ -152,8 +155,12 @@ public class Game {
      * @return {@code true} if the game is won.
      */
     public boolean hasWon() {
-        // TODO
-        return false;
+        // TODO DONE
+        //if sink is filled, return true.
+        if(map.checkPath()){
+            return true;
+        }else
+            return false;
     }
 
     /**
@@ -166,15 +173,19 @@ public class Game {
      * @return {@code true} if the game is lost.
      */
     public boolean hasLost() {
-        // TODO
-        return false;
+        // TODO DONE
+        //if delay is up, and the game hasnt been won, then we have lost.
+        if (delayBar.distance()<0&&!hasWon()){
+            return true;
+        }else
+            return false;
     }
 
     /**
      * @return Number of steps the player has taken.
      */
     public int getNumOfSteps() {
-        // TODO
-        return 0;
+        // TODO DONE
+        return numOfSteps;
     }
 }
