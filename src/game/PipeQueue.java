@@ -29,7 +29,12 @@ class PipeQueue {
      * </p>
      */
     PipeQueue() {
-        // TODO
+        // TODO DONE
+        this.pipeQueue = new LinkedList<Pipe>();
+        Random random = new Random();
+        for (int i = 0; i < MAX_GEN_LENGTH; i++) {
+            pipeQueue.add(generateNewPipe());
+        }
     }
 
     /**
@@ -43,7 +48,8 @@ class PipeQueue {
      * @param pipes List of pipes to display before generated pipes.
      */
     PipeQueue(@Nullable List<Pipe> pipes) {
-        // TODO
+        // TODO DONE
+        this.pipeQueue = new LinkedList<Pipe>(pipes);
     }
 
     /**
@@ -53,7 +59,8 @@ class PipeQueue {
      * @throws IllegalStateException if there are no pipes in the queue.
      */
     @NotNull Pipe peek() {
-        // TODO
+        // TODO DONE
+        return this.pipeQueue.getFirst();
     }
 
     /**
@@ -63,7 +70,8 @@ class PipeQueue {
      * {@link PipeQueue#MAX_GEN_LENGTH}.
      */
     void consume() {
-        // TODO
+        // TODO DONE
+        this.pipeQueue.pop();
     }
 
     /**
@@ -72,7 +80,8 @@ class PipeQueue {
      * @param pipe Pipe to insert to front of queue.
      */
     void undo(@NotNull final Pipe pipe) {
-        // TODO
+        // TODO DONE
+        this.pipeQueue.add(0,pipe);
     }
 
     /**
@@ -96,6 +105,10 @@ class PipeQueue {
      * @return A new pipe.
      */
     @NotNull private static Pipe generateNewPipe() {
-        // TODO
+        // TODO DONE
+        Random random = new Random();
+
+        Pipe.Shape randomX = Pipe.Shape.values()[random.nextInt(Pipe.Shape.values().length)];
+        return new Pipe(randomX);
     }
 }
