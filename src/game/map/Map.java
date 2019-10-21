@@ -21,7 +21,7 @@ public class Map {
     private final int rows;
     private final int cols;
     @NotNull
-    final Cell[][] cells;
+    final public Cell[][] cells;
 
     private TerminationCell sourceCell;
     private TerminationCell sinkCell;
@@ -55,7 +55,7 @@ public class Map {
         // TODO DONE
         this.rows = rows;
         this.cols = cols;
-        cells = new Cell[rows][cols];
+        this.cells = new Cell[rows][cols];
     }
 
     /**

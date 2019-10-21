@@ -33,7 +33,7 @@ public class Game {
     public Game(int rows, int cols) {
         // TODO DONE
         this.map = new Map(rows,cols);
-        this.delayBar = new DelayBar(0); //todo not sure if correct
+        this.delayBar = new DelayBar(5);
         this.pipeQueue = new PipeQueue();
     }
 
@@ -89,9 +89,9 @@ public class Game {
         // TODO DONE
         Coordinate coord = new Coordinate(row,col);
         if (this.map.tryPlacePipe(coord, this.pipeQueue.peek())){
+            cellStack.push(new FillableCell(coord,pipeQueue.peek()));//todo sigh
             pipeQueue.consume();
             delayBar.countdown();
-            cellStack.pop(); //todo this could be wrong
             numOfSteps++;
             return true;
         } //try and place the pipe
@@ -120,10 +120,15 @@ public class Game {
      * @return {@code false} if there are no steps to undo, otherwise {@code true}.
      */
     public boolean undoStep() {
-        // TODO not sure how to make this work, come back later
-        numOfSteps++;
-
-        return false;
+        // TODO DONE?
+        Pipe undoPipe = cellStack.pop().getPipe().get();
+        if(undoPipe==null){
+            return false; //failed to undo, as the object was null
+        }else{
+            pipeQueue.undo(undoPipe);//puts the pipe into pipequeue
+            numOfSteps++;
+            return true;
+        }
     }
 
     /**
@@ -176,7 +181,7 @@ public class Game {
     public boolean hasLost() {
         // TODO DONE
         //if delay is up, and the game hasnt been won, then we have lost.
-        if (delayBar.distance()<0&&!hasWon()){
+        if (map.hasLost()){
             return true;
         }else
             return false;
