@@ -212,44 +212,52 @@ public class Map {
      * @param distance Distance to fill pipes.
      */
     public void fillTiles(int distance) {
-        // TODO
-        if (distance<=0){
-            System.out.println("cannot fill a negative/zero distance!");
-        }
+        // TODO figure out initial case.
+        int count = distance;
 
-        Stack<FillableCell> cellStack = new Stack<FillableCell>();
-        List<Coordinate> nextFillCoord = new LinkedList<Coordinate>();
-        nextFillCoord.add(sourceCell.pointingTo.getOffset().add(sourceCell.coord)); //we add to next fill list
-        int count = 0;
+        List<Cell> cellsToExplore = new LinkedList<Cell>();
+        prevFilledTiles = 0;
+        //Add elements to cells to explore.
+        while(count>0){
+            List<Cell> tempList = new LinkedList<Cell>();
+            for(Cell currentCell : cellsToExplore){
+                //check that the cell is valid. we only accept fillable or termination
+                assert currentCell.getClass() == FillableCell.class||currentCell.getClass()==TerminationCell.class;
+                if(currentCell.getClass()==FillableCell.class) {// in the fillable case:
+                    FillableCell fillableCell = (FillableCell) currentCell;//cast to fillable
 
-        do {
-            //perform checks on the valid connections of the coord we looking at
-            Coordinate currCord = nextFillCoord.get(0);
+                    assert !fillableCell.getPipe().isEmpty();//should not be empty
+                    fillableCell.getPipe().get().setFilled();//fill
+                    prevFilledTiles++;
 
-            if(cells[currCord.row][currCord.col].getClass() == Cell.class){
-                continue; //if its just a normal cell, no point
-            }
-            if(cells[currCord.row][currCord.col].getClass() == FillableCell.class){
-                //we know its fillable, thus we cast to fillable
-                FillableCell fillableCell = (FillableCell) cells[currCord.row][currCord.col];
-                if(!fillableCell.getPipe().isEmpty()){//non null pipe
-                    if(!fillableCell.getPipe().get().getFilled()){ //not filled
-                        //if all these hold, then we can get the connections
-                        for(Direction direction : fillableCell.getPipe().get().getConnections()){
-                            Coordinate nextCoord = direction.getOffset().add(currCord);
-                            nextFillCoord.add(nextCoord); //we dont perform extra checks, cuz we do that before anyway
-                            //there may be repeated work, but i really dont care
+                    for (Direction d : fillableCell.getPipe().get().getConnections()) {
+                        //now we want to get the cells that are fillable that are connected to
+                        Coordinate candidateCoord = new Coordinate(fillableCell.coord.row, fillableCell.coord.col);
+                        candidateCoord = candidateCoord.add(d.getOffset());
+                        Cell candidateCell = cells[candidateCoord.row][candidateCoord.col];
+                        if (candidateCell.getClass() != FillableCell.class ||
+                                candidateCell.getClass() != TerminationCell.class) {
+                            continue; //if it isnt a fillable or a termination cell, we do nothing.
+                        } else if (candidateCell.getClass() == FillableCell.class) {
+                            FillableCell fillcell = (FillableCell) candidateCell;//cast to fillable
+                            if (!fillcell.getPipe().isEmpty()) {//finally, check if there is a pipe
+                                if(!fillcell.getPipe().get().getFilled())
+                                    tempList.add(fillcell); //only add if there is pipe, and pipe is not already filled/explored
+                            }
+                        }else if (candidateCell.getClass()== TerminationCell.class){
+                            tempList.add(candidateCell);
                         }
-                        fillableCell.getPipe().get().setFilled();//finally, once we have explored the pipe
                     }
+                }else if(currentCell.getClass()==TerminationCell.class){
+                    TerminationCell terminationCell = (TerminationCell) currentCell;
+                    terminationCell.setFilled();
+                    prevFilledTiles++;
                 }
+
             }
-
-
-
-            //add to stack
-            //pop top coord.
-        }while(!nextFillCoord.isEmpty());
+            cellsToExplore = tempList;
+            count--;
+        }
     }
 
     /**
@@ -291,6 +299,9 @@ public class Map {
      */
     public boolean hasLost() {
         // TODO
+        if ((!sinkCell.getFilled())&&prevFilledTiles==0){
+            return true;
+        }
         return false;
     }
 }

@@ -37,7 +37,7 @@ class DelayBar {
      * @return The distance the water should flow at this stage.
      */
     int distance() {
-        // TODO DONE
+        // TODO DONE?
         if(currentValue>0)
             return 0;
         else return -currentValue;
