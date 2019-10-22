@@ -36,8 +36,22 @@ public abstract class Cell implements MapElement {
      * @return A cell based on the given creation parameters, or null if the parameters cannot form a valid Cell.
      */
     public static @Nullable Cell fromChar(char c, @NotNull Coordinate coord, @Nullable TerminationCell.Type terminationType) {
-        // TODO
-
-        return null;
+        // TODO DONE?
+        switch (c){
+            case 'W':
+                return new Wall(coord);
+            case '.':
+                return new FillableCell(coord);
+            case '^':
+                return new TerminationCell(coord, Direction.UP, terminationType);
+            case 'v':
+                return new TerminationCell(coord, Direction.DOWN, terminationType);
+            case '<':
+                return new TerminationCell(coord, Direction.LEFT, terminationType);
+            case '>':
+                return new TerminationCell(coord, Direction.RIGHT, terminationType);
+            default:
+                return null;
+        }
     }
 }
