@@ -22,6 +22,7 @@ public class FillableCell extends Cell implements MapElement {
      * @param coord Coordinate where the cell resides in the map.
      */
     public FillableCell(@NotNull Coordinate coord) {
+        super(coord);
         pipe = null;
     }
 
@@ -32,15 +33,16 @@ public class FillableCell extends Cell implements MapElement {
      * @param pipe The pipe inside this cell.
      */
     public FillableCell(@NotNull Coordinate coord, @Nullable Pipe pipe) {
-        pipe = null;
+        super(coord);
+        this.pipe = pipe;
     }
 
     /**
      * @return An {@link java.util.Optional} representing the pipe in this tile.
      */
     public @NotNull Optional<Pipe> getPipe() {
-        // TODO
-        return null;
+        // TODO DONE
+        return pipe!=null? Optional.of(pipe):Optional.empty();
     }
 
     /**
@@ -48,7 +50,11 @@ public class FillableCell extends Cell implements MapElement {
      */
     @Override
     public char toSingleChar() {
-        // TODO
-        return '\0';
+        // TODO DONE
+        if(this.pipe == null){
+            return '.';
+        }
+
+        return this.pipe.toSingleChar();
     }
 }
