@@ -91,15 +91,19 @@ public class Map {
                 throw new IllegalStateException("Unexpected value: " + wall);
         }
 
-        do{
+        while(true){
             col = (int) (Math.random()*(cols-2))+1;
             row = (int) (Math.random()*(rows-2))+1;
             dir = (int) (Math.random()*(3));
             Direction direction = Direction.values()[dir];
-            sourceCell = new TerminationCell(new Coordinate(row,col),direction, TerminationCell.Type.SINK);
+            sourceCell = new TerminationCell(new Coordinate(row,col),direction, TerminationCell.Type.SOURCE);
+            if (cells[sourceCell.pointingTo.getOffset().add(sourceCell.coord).row]
+                    [sourceCell.pointingTo.getOffset().add(sourceCell.coord).col] instanceof Wall){
+                continue;
+            }
             cells[row][col] = sourceCell;
-        } while(cells[sourceCell.pointingTo.getOffset().add(sourceCell.coord).row]
-                [sourceCell.pointingTo.getOffset().add(sourceCell.coord).col] instanceof Wall);
+            break;
+        }
 
     }
 
@@ -394,7 +398,7 @@ public class Map {
      */
     public boolean hasLost() {
         // TODO
-        if ((!sinkCell.getFilled())&&prevFilledTiles==0){
+        if (!checkPath()&&prevFilledTiles==0){
             return true;
         }
         return false;

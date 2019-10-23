@@ -17,7 +17,11 @@ class AdditionalMapTest {
     void defaultMapConstructorValid() {
 
         final var map = assertDoesNotThrow(() -> new Map(4,4));
-
+        final var map1 = assertDoesNotThrow(() -> new Map(4,4));
+        final var map2 = assertDoesNotThrow(() -> new Map(4,4));
+        final var map3 = assertDoesNotThrow(() -> new Map(4,4));
+        final var map4 = assertDoesNotThrow(() -> new Map(4,4));
+        //tests for randomness
     }
 
     /**
@@ -46,62 +50,20 @@ class AdditionalMapTest {
         assertTrue(()->map.checkPath());
     }
 
-    /**
-     * Tests whether a non-first pipes can be filled when connected with the previous pipe with the correct direction.
-     * <p>
-     * Succeeds if the pipe is filled.
-     * </p>
-     */
     @Test
-    void givenSubsequentPipe_ifCanFillPipeFromCorrectDirection_thenSuccess() {
+    void checkPipeValidationThenRunDisplay(){
+        //haha
         final var cellRep =
                         "WWWW\n" +
                         "W.<W\n" +
                         "W..>\n" +
                         "WWWW";
         final var map = assertDoesNotThrow(() -> Map.fromString(4, 4, cellRep));
-
         assertTrue(() -> map.tryPlacePipe(1, 1, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
-        assertTrue(() -> map.tryPlacePipe(2, 1, new Pipe(Pipe.Shape.TOP_RIGHT)));
-
-        map.fillTiles(2);
-
-        assertTrue(() -> map.cells[1][1] instanceof FillableCell);
-        final var firstCell = (FillableCell) map.cells[1][1];
-        assertTrue(() -> firstCell.getPipe().isPresent() && firstCell.getPipe().get().getFilled());
-
-        assertTrue(() -> map.cells[2][1] instanceof FillableCell);
-        final var secondCell = (FillableCell) map.cells[2][1];
-        assertTrue(() -> secondCell.getPipe().isPresent() && secondCell.getPipe().get().getFilled());
-    }
-
-    /**
-     * Tests whether a non-first pipe can be filled when not connected with the previous pipe due to incorrect
-     * direction.
-     * <p>
-     * Succeeds if the pipe is not filled.
-     * </p>
-     */
-    @Test
-    void givenSubsequentPipe_ifCanFillPipeFromIncorrectDirection_thenFail() {
-        final var cellRep =
-                "WWWW\n" +
-                        "W.<W\n" +
-                        "W..>\n" +
-                        "WWWW";
-        final var map = assertDoesNotThrow(() -> Map.fromString(4, 4, cellRep));
-
-        assertTrue(() -> map.tryPlacePipe(1, 1, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
-        assertTrue(() -> map.tryPlacePipe(2, 1, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
-
-        map.fillTiles(2);
-
-        assertTrue(() -> map.cells[1][1] instanceof FillableCell);
-        final var firstCell = (FillableCell) map.cells[1][1];
-        assertTrue(() -> firstCell.getPipe().isPresent() && firstCell.getPipe().get().getFilled());
-
-        assertTrue(() -> map.cells[2][1] instanceof FillableCell);
-        final var secondCell = (FillableCell) map.cells[2][1];
-        assertFalse(() -> secondCell.getPipe().isPresent() && secondCell.getPipe().get().getFilled());
+        assertTrue(() -> map.tryPlacePipe(2, 1, new Pipe(Pipe.Shape.VERTICAL)));
+        assertTrue(() -> map.tryPlacePipe(2, 2, new Pipe(Pipe.Shape.CROSS)));
+        assertFalse(() -> map.tryPlacePipe(1, 2, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
+        assertFalse(() -> map.tryPlacePipe(0, 1, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
+        map.display();
     }
 }

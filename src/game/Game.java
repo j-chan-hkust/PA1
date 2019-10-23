@@ -34,7 +34,7 @@ public class Game {
     public Game(int rows, int cols) {
         // TODO DONE
         this.map = new Map(rows,cols);
-        this.delayBar = new DelayBar(5);
+        this.delayBar = new DelayBar();
         this.pipeQueue = new PipeQueue();
     }
 
