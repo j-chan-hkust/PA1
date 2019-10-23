@@ -39,7 +39,7 @@ public class Map {
     /**
      * You can use this variable to implement the {@link Map#fillTiles} method, but it is not necessary
      */
-    private Integer prevFilledDistance;
+    private Integer prevFilledDistance = 0;
 
     /**
      * Creates a map with size of rows x cols.
@@ -271,7 +271,12 @@ public class Map {
      */
     public void fillTiles(int distance) {
         // TODO figure out initial case.
-        int count = distance;
+        if(distance<=0){
+            return;
+        }
+
+        int count = distance-prevFilledDistance;
+        prevFilledDistance += distance;
         prevFilledTiles = 0;
         Set<Cell> filledCells = new HashSet<Cell>();
         fillBeginTile();

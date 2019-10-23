@@ -3,6 +3,7 @@ package game;
 import game.map.Map;
 import game.map.cells.Cell;
 import game.map.cells.FillableCell;
+import game.map.cells.TerminationCell;
 import game.pipes.Pipe;
 import io.Deserializer;
 import org.jetbrains.annotations.NotNull;
@@ -89,7 +90,7 @@ public class Game {
         // TODO DONE
         Coordinate coord = new Coordinate(row,col-'A'+1);
         if (this.map.tryPlacePipe(coord, this.pipeQueue.peek())){
-            cellStack.push(new FillableCell(coord,pipeQueue.peek()));//todo sigh
+            cellStack.push(new FillableCell(coord));//todo sigh
             pipeQueue.consume();
             delayBar.countdown();
             numOfSteps++;
@@ -122,14 +123,20 @@ public class Game {
      */
     public boolean undoStep() {
         // TODO DONE?
-        Pipe undoPipe = cellStack.pop().getPipe().get();
-        if(undoPipe==null){
-            return false; //failed to undo, as the object was null
-        }else{
-            pipeQueue.undo(undoPipe);//puts the pipe into pipequeue
-            numOfSteps++;
-            return true;
+        FillableCell cell = cellStack.pop();
+        if(cell == null){
+            return false;
         }
+        if(((FillableCell) map.cells[cell.coord.row][cell.coord.col]).getPipe().get().getFilled()){
+            System.out.println("No steps to undo, pipe is already filled!");
+            cellStack.push(( cell));
+            return false;
+        }
+        Coordinate coord = cell.coord;
+        pipeQueue.undo(((FillableCell) map.cells[coord.row][coord.col]).getPipe().get());//puts the pipe into pipequeue
+        map.undo(coord);
+        numOfSteps++;
+        return true;
     }
 
     /**
@@ -153,7 +160,7 @@ public class Game {
      */
     public void updateState() {
         // TODO DONE
-        this.map.fillTiles(1); //fill the distance by 1.
+        this.map.fillTiles(delayBar.distance()); //fill the distance by 1.
     }
 
     /**
@@ -182,7 +189,7 @@ public class Game {
     public boolean hasLost() {
         // TODO DONE
         //if delay is up, and the game hasnt been won, then we have lost.
-        if (map.hasLost()){
+        if (map.hasLost()&&delayBar.distance()>0){
             return true;
         }else
             return false;

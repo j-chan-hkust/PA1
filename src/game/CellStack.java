@@ -22,7 +22,6 @@ class CellStack {
     void push(@NotNull final FillableCell cell) {
         // TODO DONE
         cellStack.push(cell);
-        count++;
     }
 
     /**
@@ -35,10 +34,7 @@ class CellStack {
         if(this.cellStack.empty()){
             return null;
         }
-        if(this.cellStack.peek().getPipe().isEmpty()){
-            System.out.println("No steps to undo!"); //as per the notes, return error on filled pipe
-            return null;
-        }
+        count++;
         return cellStack.pop();
     }
 

@@ -20,6 +20,11 @@ class DelayBar {
         this.currentValue = initialValue;
     }
 
+    DelayBar() { //default constructor
+        this.initialValue = 5;
+        this.currentValue = 5;
+    }
+
     /**
      * Decrements the current value by 1.
      */

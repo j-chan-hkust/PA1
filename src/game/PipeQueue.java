@@ -72,6 +72,7 @@ class PipeQueue {
     void consume() {
         // TODO DONE
         this.pipeQueue.pop();
+        pipeQueue.add(generateNewPipe());
     }
 
     /**
