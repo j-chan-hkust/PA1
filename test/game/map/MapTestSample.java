@@ -16,7 +16,7 @@ class MapTestSample {
     @Test
     void givenFirstPipe_ifCanFillPipeFromCorrectDirection_thenSuccess() {
         final var cellRep =
-                "WWWW\n" +
+                        "WWWW\n" +
                         "W.<W\n" +
                         "W..>\n" +
                         "WWWW";
@@ -66,7 +66,7 @@ class MapTestSample {
     @Test
     void givenSubsequentPipe_ifCanFillPipeFromCorrectDirection_thenSuccess() {
         final var cellRep =
-                "WWWW\n" +
+                        "WWWW\n" +
                         "W.<W\n" +
                         "W..>\n" +
                         "WWWW";

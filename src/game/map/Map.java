@@ -56,6 +56,51 @@ public class Map {
         this.rows = rows;
         this.cols = cols;
         this.cells = new Cell[rows][cols];
+        for(int i = 0; i<rows; i++){
+            for(int j = 0;j<cols; j++){
+                if(i==0||i==rows-1||j==0||j==cols-1){//this is the case where it is on the edge
+                    cells[i][j] = new Wall(new Coordinate(i,j));
+                }else{
+                    cells[i][j] = new FillableCell(new Coordinate(i,j));
+                }
+            }
+        }
+
+        int wall = (int) Math.random()*3;
+        int col = (int) Math.random()*(cols-2)+1;
+        int row = (int) Math.random()*(rows-2)+1;
+        int dir;
+        switch (wall){
+            case 0://top wall
+                sinkCell = new TerminationCell(new Coordinate(0,col),Direction.UP, TerminationCell.Type.SINK);
+                cells[0][col] = sinkCell;
+                break;
+            case 1: //bottom wall
+                sinkCell = new TerminationCell(new Coordinate(rows-1,col),Direction.DOWN, TerminationCell.Type.SINK);
+                cells[rows-1][col] = sinkCell;
+                break;
+            case 2: //left wall
+                sinkCell = new TerminationCell(new Coordinate(row,0),Direction.LEFT, TerminationCell.Type.SINK);
+                cells[row][0] = sinkCell;
+                break;
+            case 3: //left wall
+                sinkCell = new TerminationCell(new Coordinate(row,cols-1),Direction.RIGHT, TerminationCell.Type.SINK);
+                cells[row][cols-1] = sinkCell;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + wall);
+        }
+
+        do{
+            col = (int) Math.random()*(cols-2)+1;
+            row = (int) Math.random()*(rows-2)+1;
+            dir = (int) Math.random()*(3);
+            Direction direction = Direction.values()[dir];
+            sourceCell = new TerminationCell(new Coordinate(row,col),direction, TerminationCell.Type.SINK);
+            cells[row][col] = sourceCell;
+        } while(cells[sourceCell.pointingTo.getOffset().add(sourceCell.coord).row]
+                [sourceCell.pointingTo.getOffset().add(sourceCell.coord).col] instanceof Wall);
+
     }
 
     /**
@@ -74,6 +119,18 @@ public class Map {
         this.rows = rows;
         this.cols = cols;
         this.cells = cells;
+        for(int i = 0; i<rows; i++){
+            for(int j = 0; j<cols; j++){
+                if(cells[i][j] instanceof TerminationCell){
+                    TerminationCell terminationCell = (TerminationCell) cells[i][j];
+                    if(terminationCell.type == TerminationCell.Type.SINK){
+                        sinkCell = terminationCell;
+                    }else if(terminationCell.type == TerminationCell.Type.SOURCE){
+                        sourceCell = terminationCell;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -129,12 +186,12 @@ public class Map {
             return false; //pipe placing fails
         }
         //check if cell is fillable
-        if(cells[row][col] instanceof FillableCell){
+        if(!(cells[row][col] instanceof FillableCell)){
             return false; //class check failed, it was a wall or something.
         }else{//check if pipe already exists
             FillableCell fillableCell = (FillableCell) cells[row][col];
-            if(!fillableCell.getPipe().isEmpty()){
-                cells[row][cols] = new FillableCell(new Coordinate(row, col),p);
+            if(fillableCell.getPipe().isEmpty()){
+                cells[row][col] = new FillableCell(new Coordinate(row, col),p);
                 return true;
             }else{
                 return false; //there was already a pipe!
@@ -198,6 +255,7 @@ public class Map {
      */
     public void fillBeginTile() {
         sourceCell.setFilled();
+        filledTiles.add(sourceCell.coord);
     }
 
     /**
@@ -217,6 +275,7 @@ public class Map {
 
         List<Cell> cellsToExplore = new LinkedList<Cell>();
         prevFilledTiles = 0;
+
         //Add elements to cells to explore.
         while(count>0){
             List<Cell> tempList = new LinkedList<Cell>();
