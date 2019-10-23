@@ -278,12 +278,16 @@ public class Map {
      */
     public void fillTiles(int distance) {
         // TODO figure out initial case.
-        if(distance<=0){
+        if(distance<0){
             return;
         }
 
+        if(distance==0){
+            fillBeginTile();
+        }
+
         int count = distance-prevFilledDistance;
-        prevFilledDistance += distance;
+        prevFilledDistance = distance;
         prevFilledTiles = 0;
         Set<Cell> filledCells = new HashSet<Cell>();
         fillBeginTile();

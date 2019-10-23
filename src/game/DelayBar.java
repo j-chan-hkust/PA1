@@ -43,9 +43,7 @@ class DelayBar {
      */
     int distance() {
         // TODO DONE?
-        if(currentValue>0)
-            return 0;
-        else return -currentValue;
+        return -currentValue;
     }
 
     void display() {
