@@ -271,55 +271,46 @@ public class Map {
      */
     public void fillTiles(int distance) {
         // TODO figure out initial case.
-        int count = distance+1;
-        List<Cell> cellsToExplore = new LinkedList<Cell>();
-
-        fillBeginTile();//no matter what, we fill the tile
-        for(Coordinate coord : filledTiles){
-            cellsToExplore.add(cells[coord.row][coord.col]);
-        }
-
+        int count = distance;
         prevFilledTiles = 0;
+        Set<Cell> filledCells = new HashSet<Cell>();
+        fillBeginTile();
+        for(Coordinate coord : filledTiles)
+            filledCells.add(cells[coord.row][coord.col]);
 
-        //Add elements to cells to explore.
         while(count>0){
-            List<Cell> tempList = new LinkedList<Cell>();
-            for(Cell currentCell : cellsToExplore){
-                //check that the cell is valid. we only accept fillable or termination
-                assert currentCell.getClass() == FillableCell.class||currentCell.getClass()==TerminationCell.class;
-                if(currentCell.getClass()==FillableCell.class) {// in the fillable case:
-                    FillableCell fillableCell = (FillableCell) currentCell;//cast to fillable
-
-                    assert !fillableCell.getPipe().isEmpty();//should not be empty
-                    fillableCell.getPipe().get().setFilled();//fill
-                    prevFilledTiles++;
-
-                    for (Direction d : fillableCell.getPipe().get().getConnections()) {
-                        //now we want to get the cells that are fillable that are connected to
-                        Coordinate candidateCoord = new Coordinate(fillableCell.coord.row, fillableCell.coord.col);
-                        candidateCoord = candidateCoord.add(d.getOffset());
-                        Cell candidateCell = cells[candidateCoord.row][candidateCoord.col];
-                        if (candidateCell.getClass() != FillableCell.class ||
-                                candidateCell.getClass() != TerminationCell.class) {
-                            continue; //if it isnt a fillable or a termination cell, we do nothing.
-                        } else if (candidateCell.getClass() == FillableCell.class) {
-                            FillableCell fillcell = (FillableCell) candidateCell;//cast to fillable
-                            if (!fillcell.getPipe().isEmpty()) {//finally, check if there is a pipe
-                                if(!fillcell.getPipe().get().getFilled())
-                                    tempList.add(fillcell); //only add if there is pipe, and pipe is not already filled/explored
+            for(Cell cell : filledCells){
+                Direction[] directions = null;
+                if(cell instanceof FillableCell){
+                    directions = ((FillableCell) cell).getPipe().get().getConnections();
+                }
+                else if(cell instanceof TerminationCell){
+                    directions = new Direction[]{((TerminationCell) cell).pointingTo};
+                }
+                for (Direction d : directions){
+                    Coordinate candidateCoord = new Coordinate(cell.coord.row, cell.coord.col);
+                    candidateCoord = candidateCoord.add(d.getOffset());
+                    Cell candidateCell = cells[candidateCoord.row][candidateCoord.col];
+                    if(candidateCell instanceof FillableCell){
+                        if(((FillableCell)candidateCell).getPipe().isPresent()){
+                            if(!((FillableCell)candidateCell).getPipe().get().getFilled()){
+                                ((FillableCell)candidateCell).getPipe().get().setFilled();
+                                prevFilledTiles++;
+                                filledTiles.add(candidateCell.coord);
+                                filledCells.add(candidateCell);
                             }
-                        }else if (candidateCell.getClass()== TerminationCell.class){
-                            tempList.add(candidateCell);
                         }
                     }
-                }else if(currentCell.getClass()==TerminationCell.class){
-                    TerminationCell terminationCell = (TerminationCell) currentCell;
-                    terminationCell.setFilled();
-                    prevFilledTiles++;
+                    if(candidateCell instanceof TerminationCell){
+                        if(!((TerminationCell)candidateCell).getFilled()){
+                            ((TerminationCell)candidateCell).setFilled();
+                            prevFilledTiles++;
+                            filledTiles.add(candidateCell.coord);
+                            filledCells.add(candidateCell);
+                        }
+                    }
                 }
-
             }
-            cellsToExplore = tempList;
             count--;
         }
     }
