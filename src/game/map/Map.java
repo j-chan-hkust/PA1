@@ -35,7 +35,7 @@ public class Map {
     /**
      * You can use this variable to implement the {@link Map#fillTiles} method, but it is not necessary
      */
-    private int prevFilledTiles = 0;
+    private int prevFilledTiles = -1;
     /**
      * You can use this variable to implement the {@link Map#fillTiles} method, but it is not necessary
      */
@@ -130,6 +130,9 @@ public class Map {
                     }
                 }
             }
+        }
+        if (sourceCell == null||sinkCell == null){
+            throw new IllegalStateException();
         }
     }
 
@@ -322,6 +325,8 @@ public class Map {
                 }
             }
             count--;
+            if(tempSet.isEmpty())
+                break;//evidently, there are no more pipes to explore, and we can end.
             filledCells = tempSet;
         }
     }
@@ -338,19 +343,47 @@ public class Map {
      */
     public boolean checkPath() {
         // TODO DONE?
-        /*Coordinate sinkCellPointCoord = this.sinkCell.pointingTo.getOffset().add(this.sinkCell.coord);
-        if(cells[sinkCellPointCoord.row][sinkCellPointCoord.col].getClass() == FillableCell.class) {
-            //we know its fillable, thus we cast to fillable
-            FillableCell fillableCell = (FillableCell) cells[sinkCellPointCoord.row][sinkCellPointCoord.col];
-            if (!fillableCell.getPipe().isEmpty()) {//non null pipe
-                if (fillableCell.getPipe().get().getFilled()) { //not filled
-                    return true; //points to a fillable, has a pipe, pipe is filled
+        Set<Cell> filledCells = new HashSet<Cell>();
+        filledCells.add(this.sourceCell);
+
+        while(true){
+            Set<Cell> tempSet = new HashSet<Cell>();
+            for(Cell cell : filledCells){
+                Direction[] directions = null;
+                if(cell instanceof FillableCell){
+                    directions = ((FillableCell) cell).getPipe().get().getConnections();
+                }
+                else if(cell instanceof TerminationCell){
+                    directions = new Direction[]{((TerminationCell) cell).pointingTo};
+                }
+                for (Direction d : directions){
+                    Coordinate candidateCoord = new Coordinate(cell.coord.row, cell.coord.col);
+                    candidateCoord = candidateCoord.add(d.getOffset());
+                    Cell candidateCell = cells[candidateCoord.row][candidateCoord.col];
+                    if(candidateCell instanceof FillableCell){
+                        if(((FillableCell)candidateCell).getPipe().isPresent()){
+                            if(!((FillableCell)candidateCell).getPipe().get().getFilled()){
+                                for(Direction cd : ((FillableCell)candidateCell).getPipe().get().getConnections()){
+                                    if(cd.getOpposite()==d){
+                                        tempSet.add(candidateCell);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(candidateCell instanceof TerminationCell){
+                        if(!((TerminationCell)candidateCell).getFilled()){
+                            if(((TerminationCell)candidateCell).type== TerminationCell.Type.SINK){
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
-        }*/
-
-        if(this.sinkCell.getFilled())
-            return true;
+            if(tempSet.isEmpty())
+                break;//evidently, there are no more pipes to explore, and we can end.
+            filledCells = tempSet;
+        }
 
         return false;
     }
