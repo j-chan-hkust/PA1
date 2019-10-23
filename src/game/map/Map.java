@@ -271,9 +271,14 @@ public class Map {
      */
     public void fillTiles(int distance) {
         // TODO figure out initial case.
-        int count = distance;
-
+        int count = distance+1;
         List<Cell> cellsToExplore = new LinkedList<Cell>();
+
+        fillBeginTile();//no matter what, we fill the tile
+        for(Coordinate coord : filledTiles){
+            cellsToExplore.add(cells[coord.row][coord.col]);
+        }
+
         prevFilledTiles = 0;
 
         //Add elements to cells to explore.
