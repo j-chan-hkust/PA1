@@ -279,6 +279,7 @@ public class Map {
             filledCells.add(cells[coord.row][coord.col]);
 
         while(count>0){
+            Set<Cell> tempSet = new HashSet<Cell>();
             for(Cell cell : filledCells){
                 Direction[] directions = null;
                 if(cell instanceof FillableCell){
@@ -294,10 +295,14 @@ public class Map {
                     if(candidateCell instanceof FillableCell){
                         if(((FillableCell)candidateCell).getPipe().isPresent()){
                             if(!((FillableCell)candidateCell).getPipe().get().getFilled()){
-                                ((FillableCell)candidateCell).getPipe().get().setFilled();
-                                prevFilledTiles++;
-                                filledTiles.add(candidateCell.coord);
-                                filledCells.add(candidateCell);
+                                for(Direction cd : ((FillableCell)candidateCell).getPipe().get().getConnections()){
+                                    if(cd.getOpposite()==d){
+                                        ((FillableCell)candidateCell).getPipe().get().setFilled();
+                                        prevFilledTiles++;
+                                        filledTiles.add(candidateCell.coord);
+                                        tempSet.add(candidateCell);
+                                    }
+                                }
                             }
                         }
                     }
@@ -306,12 +311,13 @@ public class Map {
                             ((TerminationCell)candidateCell).setFilled();
                             prevFilledTiles++;
                             filledTiles.add(candidateCell.coord);
-                            filledCells.add(candidateCell);
+                            tempSet.add(candidateCell);
                         }
                     }
                 }
             }
             count--;
+            filledCells = tempSet;
         }
     }
 

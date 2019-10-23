@@ -53,7 +53,7 @@ public class Pipe implements MapElement {
             case TOP_RIGHT:
                 return new Direction[]{Direction.UP,Direction.RIGHT};
             case BOTTOM_LEFT:
-                return new Direction[]{Direction.LEFT,Direction.UP};
+                return new Direction[]{Direction.LEFT,Direction.DOWN};
             case BOTTOM_RIGHT:
                 return new Direction[]{Direction.DOWN,Direction.RIGHT};
             case CROSS:
