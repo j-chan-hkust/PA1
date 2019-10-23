@@ -125,11 +125,11 @@ public class Map {
     boolean tryPlacePipe(int row, int col, @NotNull Pipe p) {
         // TODO DONE?
         //check if coord in bounds
-        if(col>=cols||row>=rows){
+        if(col>=cols||row>=rows||row<0||col<0){
             return false; //pipe placing fails
         }
         //check if cell is fillable
-        if(cells[row][col].getClass()!=FillableCell.class){
+        if(cells[row][col] instanceof FillableCell){
             return false; //class check failed, it was a wall or something.
         }else{//check if pipe already exists
             FillableCell fillableCell = (FillableCell) cells[row][col];
