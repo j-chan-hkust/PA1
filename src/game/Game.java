@@ -87,8 +87,7 @@ public class Game {
      */
     public boolean placePipe(int row, char col) {
         // TODO DONE
-
-        Coordinate coord = new Coordinate(row,col-'A');
+        Coordinate coord = new Coordinate(row,col-'A'+1);
         if (this.map.tryPlacePipe(coord, this.pipeQueue.peek())){
             cellStack.push(new FillableCell(coord,pipeQueue.peek()));//todo sigh
             pipeQueue.consume();
@@ -106,6 +105,7 @@ public class Game {
     public void skipPipe() {
         // TODO DONE
         this.pipeQueue.consume();
+        numOfSteps++;
     }
 
     /**

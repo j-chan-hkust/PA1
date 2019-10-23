@@ -58,7 +58,7 @@ class GameTestSample {
     @Test
     void givenGame_ifPipeCannotBePlaced_stepCountDoesNotChange() {
         final var cellRep =
-                "WWWW\n" +
+                        "WWWW\n" +
                         "W.<W\n" +
                         "W..>\n" +
                         "WWWW";
