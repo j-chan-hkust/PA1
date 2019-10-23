@@ -66,9 +66,9 @@ public class Map {
             }
         }
 
-        int wall = (int) Math.random()*3;
-        int col = (int) Math.random()*(cols-2)+1;
-        int row = (int) Math.random()*(rows-2)+1;
+        int wall = (int) (Math.random()*3);
+        int col = (int) (Math.random()*(cols-2))+1;
+        int row = (int) (Math.random()*(rows-2))+1;
         int dir;
         switch (wall){
             case 0://top wall
@@ -92,9 +92,9 @@ public class Map {
         }
 
         do{
-            col = (int) Math.random()*(cols-2)+1;
-            row = (int) Math.random()*(rows-2)+1;
-            dir = (int) Math.random()*(3);
+            col = (int) (Math.random()*(cols-2))+1;
+            row = (int) (Math.random()*(rows-2))+1;
+            dir = (int) (Math.random()*(3));
             Direction direction = Direction.values()[dir];
             sourceCell = new TerminationCell(new Coordinate(row,col),direction, TerminationCell.Type.SINK);
             cells[row][col] = sourceCell;
