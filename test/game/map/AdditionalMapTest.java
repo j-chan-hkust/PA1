@@ -27,22 +27,23 @@ class AdditionalMapTest {
      * </p>
      */
     @Test
-    void givenFirstPipe_ifCanFillPipeFromIncorrectDirection_thenFail() {
+    void validateCheckPath() {
         final var cellRep =
-                "WWWW\n" +
+                        "WWWW\n" +
                         "W.<W\n" +
                         "W..>\n" +
                         "WWWW";
         final var map = assertDoesNotThrow(() -> Map.fromString(4, 4, cellRep));
 
-        assertTrue(() -> map.tryPlacePipe(1, 1, new Pipe(Pipe.Shape.VERTICAL)));
+        assertTrue(() -> map.tryPlacePipe(1, 1, new Pipe(Pipe.Shape.BOTTOM_RIGHT)));
 
-        map.fillTiles(2);
+        assertFalse(()->map.checkPath());
 
-        assertTrue(() -> map.cells[1][1] instanceof FillableCell);
+        assertTrue(()-> map.tryPlacePipe(2,1,new Pipe(Pipe.Shape.TOP_RIGHT)));
 
-        final var cell = (FillableCell) map.cells[1][1];
-        assertFalse(() -> cell.getPipe().isPresent() && cell.getPipe().get().getFilled());
+        assertTrue(()-> map.tryPlacePipe(2,2,new Pipe(Pipe.Shape.HORIZONTAL)));
+
+        assertTrue(()->map.checkPath());
     }
 
     /**

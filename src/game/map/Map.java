@@ -347,7 +347,7 @@ public class Map {
         filledCells.add(this.sourceCell);
 
         while(true){
-            Set<Cell> tempSet = new HashSet<Cell>();
+            Set<Cell> tempSet = new HashSet<>(filledCells);
             for(Cell cell : filledCells){
                 Direction[] directions = null;
                 if(cell instanceof FillableCell){
@@ -362,25 +362,21 @@ public class Map {
                     Cell candidateCell = cells[candidateCoord.row][candidateCoord.col];
                     if(candidateCell instanceof FillableCell){
                         if(((FillableCell)candidateCell).getPipe().isPresent()){
-                            if(!((FillableCell)candidateCell).getPipe().get().getFilled()){
                                 for(Direction cd : ((FillableCell)candidateCell).getPipe().get().getConnections()){
                                     if(cd.getOpposite()==d){
                                         tempSet.add(candidateCell);
                                     }
                                 }
-                            }
                         }
                     }
                     if(candidateCell instanceof TerminationCell){
-                        if(!((TerminationCell)candidateCell).getFilled()){
-                            if(((TerminationCell)candidateCell).type== TerminationCell.Type.SINK){
-                                return true;
-                            }
+                        if(((TerminationCell)candidateCell).type== TerminationCell.Type.SINK){
+                            return true;
                         }
                     }
                 }
             }
-            if(tempSet.isEmpty())
+            if(tempSet.size()==filledCells.size())
                 break;//evidently, there are no more pipes to explore, and we can end.
             filledCells = tempSet;
         }
