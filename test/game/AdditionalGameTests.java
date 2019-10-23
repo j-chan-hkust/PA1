@@ -11,7 +11,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameTests {
+class AdditionalGameTests {
     @Test
     void testHasLost() {
         final var cellRep =
